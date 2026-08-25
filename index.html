@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Happy 10th Birthday Arghadeep!</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Boogaloo&display=swap" rel="stylesheet" />
+  <title>Happy 10th Birthday Arghadeep! 🕷️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -18,7 +18,11 @@
 
     body {
       font-family: 'Fredoka', sans-serif;
-      background: linear-gradient(135deg, #1a102f 0%, #2b1055 50%, #591a75 100%);
+      background: #0b0f19;
+      background-image: 
+        radial-gradient(circle at 50% 20%, rgba(226, 27, 34, 0.25) 0%, transparent 60%),
+        radial-gradient(circle at 50% 80%, rgba(0, 102, 204, 0.25) 0%, transparent 60%),
+        linear-gradient(135deg, #090d16 0%, #111a2e 50%, #060911 100%);
       color: #ffffff;
       min-height: 100vh;
       display: flex;
@@ -28,11 +32,41 @@
       padding: 20px 16px 40px;
     }
 
+    /* Web Netting Background Texture */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Floating Web Elements */
+    .web-float {
+      position: fixed;
+      bottom: -80px;
+      font-size: 2rem;
+      z-index: 2;
+      opacity: 0.5;
+      animation: swingUp 9s infinite linear;
+    }
+
+    @keyframes swingUp {
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-60vh) rotate(25deg); }
+      100% { transform: translateY(-120vh) rotate(-20deg); }
+    }
+
     /* Start Overlay Screen */
     #startOverlay {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle, #2b1055 0%, #0d0618 100%);
+      background: radial-gradient(circle, #1a0507 0%, #040814 100%);
       z-index: 9999;
       display: flex;
       flex-direction: column;
@@ -43,54 +77,41 @@
       cursor: pointer;
     }
 
-    .gift-icon {
+    .spidey-mask {
       font-size: 5.5rem;
-      animation: bounceGift 1.2s infinite ease-in-out;
-      filter: drop-shadow(0 0 20px rgba(255, 0, 127, 0.7));
+      animation: pulseMask 1.2s infinite ease-in-out;
+      filter: drop-shadow(0 0 25px rgba(226, 27, 34, 0.9));
     }
 
-    @keyframes bounceGift {
-      0%, 100% { transform: translateY(0) scale(1); }
-      50% { transform: translateY(-18px) scale(1.08); }
+    @keyframes pulseMask {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12) rotate(4deg); }
     }
 
-    .open-btn {
+    .spidey-btn {
       margin-top: 24px;
-      background: linear-gradient(90deg, #ff007f, #7928ca);
+      background: linear-gradient(90deg, #e21b22, #0056b3);
       color: #fff;
-      font-size: 1.2rem;
-      font-weight: 700;
-      padding: 16px 32px;
+      font-size: 1.3rem;
+      font-family: 'Bangers', cursive;
+      letter-spacing: 1.5px;
+      padding: 16px 36px;
       border-radius: 50px;
-      border: none;
-      box-shadow: 0 0 25px rgba(255, 0, 127, 0.8);
-      font-family: 'Fredoka', sans-serif;
-      letter-spacing: 0.5px;
-      animation: pulse 1.6s infinite;
+      border: 2px solid #ffe600;
+      box-shadow: 0 0 25px rgba(226, 27, 34, 0.8);
+      animation: pulseBtn 1.5s infinite;
+    }
+
+    @keyframes pulseBtn {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 25px rgba(226, 27, 34, 0.8); }
+      50% { transform: scale(1.05); box-shadow: 0 0 35px rgba(0, 102, 204, 1); }
     }
 
     .vol-hint {
       margin-top: 14px;
-      font-size: 0.85rem;
-      color: #ffd700;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* Floating Balloons */
-    .balloon {
-      position: fixed;
-      bottom: -100px;
-      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-      z-index: 0;
-      opacity: 0.6;
-      animation: floatUp 8s infinite linear;
-    }
-
-    @keyframes floatUp {
-      0% { transform: translateY(0) rotate(0deg); }
-      100% { transform: translateY(-120vh) rotate(20deg); }
+      font-size: 0.9rem;
+      color: #ffe600;
+      font-weight: 700;
     }
 
     .container {
@@ -102,107 +123,113 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 18px;
+      gap: 16px;
     }
 
-    /* Level Up Badge */
-    .badge {
-      background: linear-gradient(90deg, #ff007f, #7928ca);
-      padding: 6px 18px;
-      border-radius: 50px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      letter-spacing: 1px;
-      box-shadow: 0 0 15px rgba(255, 0, 127, 0.6);
-      animation: pulse 1.8s infinite;
+    /* Comic Superhero Badge */
+    .comic-badge {
+      background: #e21b22;
+      color: #ffe600;
+      padding: 6px 20px;
+      border-radius: 8px;
+      font-family: 'Bangers', cursive;
+      font-size: 1.3rem;
+      letter-spacing: 1.5px;
+      border: 2px solid #ffffff;
+      box-shadow: 4px 4px 0px #0056b3, 0 0 15px rgba(226, 27, 34, 0.6);
+      transform: rotate(-2deg);
     }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
+    /* Titles */
     h1 {
-      font-family: 'Boogaloo', cursive;
-      font-size: 2.5rem;
-      line-height: 1.1;
-      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      font-family: 'Bangers', cursive;
+      font-size: 2.8rem;
+      letter-spacing: 2px;
+      color: #ffffff;
+      text-shadow: 3px 3px 0px #e21b22, 6px 6px 0px #003366;
+      line-height: 1;
     }
 
     .highlight-name {
-      background: linear-gradient(45deg, #ffd700, #ff6b6b, #48dbfb);
+      font-family: 'Bangers', cursive;
+      font-size: 3.2rem;
+      letter-spacing: 2px;
+      background: linear-gradient(45deg, #ffe600, #ff3333, #00d2ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      font-size: 2.8rem;
       display: block;
       margin-top: 4px;
+      text-shadow: 0 0 20px rgba(255, 230, 0, 0.4);
     }
 
-    .card {
-      background: rgba(255, 255, 255, 0.1);
+    /* Card Base */
+    .spidey-card {
+      background: rgba(17, 26, 46, 0.85);
       backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 24px;
-      padding: 20px;
+      border: 2px solid rgba(226, 27, 34, 0.5);
+      border-radius: 20px;
+      padding: 18px;
       width: 100%;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 102, 204, 0.2);
     }
 
-    /* Interactive Cake */
+    /* Interactive Web Cake */
     .cake-zone {
       display: flex;
       flex-direction: column;
       align-items: center;
       cursor: pointer;
+      border-color: #0077ff;
     }
 
     .cake-emoji {
       font-size: 4.8rem;
-      filter: drop-shadow(0 0 16px rgba(255, 215, 0, 0.6));
+      filter: drop-shadow(0 0 18px rgba(226, 27, 34, 0.8));
       transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .cake-zone:active .cake-emoji {
-      transform: scale(0.9);
+      transform: scale(0.9) rotate(-6deg);
     }
 
     .cake-hint {
-      font-size: 0.85rem;
-      color: #ffd700;
+      font-size: 0.9rem;
+      color: #ffe600;
       margin-top: 6px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
-    /* Stats Grid */
+    /* Hero Stats Grid */
     .stats-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 10px;
       width: 100%;
     }
 
     .stat-box {
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      padding: 14px;
+      background: rgba(6, 11, 24, 0.7);
+      border-radius: 14px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 2px;
       border: 1px solid rgba(255, 255, 255, 0.1);
+      border-left: 4px solid #e21b22;
     }
 
     .stat-number {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #00f2fe;
+      font-family: 'Bangers', cursive;
+      font-size: 1.8rem;
+      color: #00d2ff;
+      letter-spacing: 1px;
     }
 
     .stat-label {
       font-size: 0.75rem;
       color: #e0e0e0;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      font-weight: 700;
     }
 
     /* Action Buttons */
@@ -215,40 +242,44 @@
 
     .btn {
       width: 100%;
-      padding: 16px;
-      font-size: 1.1rem;
-      font-weight: 700;
+      padding: 15px;
+      font-size: 1.25rem;
       border: none;
-      border-radius: 16px;
+      border-radius: 14px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      font-family: 'Fredoka', sans-serif;
-      transition: transform 0.1s ease, box-shadow 0.2s ease;
+      font-family: 'Bangers', cursive;
+      letter-spacing: 1.5px;
+      transition: transform 0.1s ease;
     }
 
-    .btn-blast {
-      background: linear-gradient(90deg, #ff0844 0%, #ffb199 100%);
+    .btn-web {
+      background: linear-gradient(90deg, #e21b22, #b30006);
       color: #fff;
-      box-shadow: 0 8px 20px rgba(255, 8, 68, 0.4);
+      box-shadow: 0 6px 20px rgba(226, 27, 34, 0.5);
+      border: 1px solid #ff4d4d;
     }
 
-    .btn-surprise {
-      background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
-      color: #0d3824;
-      box-shadow: 0 8px 20px rgba(56, 239, 125, 0.3);
+    .btn-secret {
+      background: linear-gradient(90deg, #0066cc, #003399);
+      color: #ffe600;
+      box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
+      border: 1px solid #3399ff;
     }
 
     .btn:active {
       transform: scale(0.96);
     }
 
-    /* Surprise Box Content */
+    /* Secret Message Box */
     #surpriseBox {
       display: none;
       animation: fadeIn 0.4s ease forwards;
+      border-color: #ffe600;
+      background: rgba(14, 5, 22, 0.95);
     }
 
     @keyframes fadeIn {
@@ -259,66 +290,68 @@
 </head>
 <body>
 
-  <!-- Entry Overlay to Guarantee Audio & Full Engagement -->
+  <!-- Spider-Man Web Slinger Entry Screen -->
   <div id="startOverlay" onclick="enterCelebration()">
-    <div class="gift-icon">🎁</div>
-    <h2 style="font-family:'Boogaloo',cursive; font-size:2.2rem; margin-top:16px;">Special Delivery for Arghadeep!</h2>
-    <p style="color:#d1d8e0; margin-top:6px;">A grand 10th Birthday surprise awaits inside</p>
-    <button class="open-btn">TAP TO UNWRAP 🚀</button>
-    <h1><div class="vol-hint">🔊 Turn your device volume up! 🎶</div></h1>
+    <div class="spidey-mask">🕷️</div>
+    <h2 style="font-family:'Bangers',cursive; font-size:2.5rem; letter-spacing:2px; color:#ffe600; margin-top:12px;">CALLING SPIDER-HERO!</h2>
+    <p style="color:#d1d8e0; font-weight:600; margin-top:4px;">Arghadeep, your Level 10 Mission is ready!</p>
+    <button class="spidey-btn">🕸️ SLING INTO YOUR SURPRISE 💥</button>
+    <div class="vol-hint">🔊 Turn Volume Up For Birthday Beats! 🎶</div>
   </div>
 
-  <!-- Floating Balloons Background -->
-  <div class="balloon" style="width:40px;height:55px;left:10%;background:#ff4757;animation-duration:9s;"></div>
-  <div class="balloon" style="width:50px;height:65px;left:75%;background:#2ed573;animation-duration:11s;animation-delay:1.5s;"></div>
-  <div class="balloon" style="width:35px;height:45px;left:45%;background:#ffa502;animation-duration:7s;animation-delay:3s;"></div>
-  <div class="balloon" style="width:45px;height:60px;left:85%;background:#1e90ff;animation-duration:10s;animation-delay:2s;"></div>
+  <!-- Floating Spider & Web Emojis -->
+  <div class="web-float" style="left:8%; animation-duration:8s;">🕷️</div>
+  <div class="web-float" style="left:78%; animation-duration:11s; animation-delay:1.5s;">🕸️</div>
+  <div class="web-float" style="left:48%; animation-duration:7.5s; animation-delay:3s;">⚡</div>
+  <div class="web-float" style="left:88%; animation-duration:10s; animation-delay:2s;">🕷️</div>
 
   <div class="container">
-    <div class="badge">🚀 LEVEL 10 UNLOCKED 🎮</div>
+    <div class="comic-badge">🕸️ LEVEL 10 SUPERHERO 💥</div>
 
     <div>
       <h1>HAPPY BIRTHDAY</h1>
-      <span class="highlight-name">Arghadeep!</span>
+      <span class="highlight-name">ARGHADEEP!</span>
     </div>
 
-    <!-- Interactive Cake Card -->
-    <div class="card cake-zone" onclick="blowCandles()">
+    <!-- Web Cake Zone -->
+    <div class="spidey-card cake-zone" onclick="blowCandles()">
       <div class="cake-emoji" id="cakeEmoji">🎂</div>
-      <p class="cake-hint" id="cakeHint">✨ Tap the cake to blow out candles! ✨</p>
+      <p class="cake-hint" id="cakeHint">🕸️ Tap to blow candles with Web-Power! 🕸️</p>
     </div>
 
-    <!-- 10-Year Stats Card -->
+    <!-- Hero Stats Grid -->
     <div class="stats-grid">
       <div class="stat-box">
         <span class="stat-number">10</span>
-        <span class="stat-label">Years of Awesome</span>
+        <span class="stat-label">Hero Level (Years)</span>
       </div>
       <div class="stat-box">
         <span class="stat-number">3,652</span>
-        <span class="stat-label">Days of Smiles</span>
+        <span class="stat-label">Days of Bravery</span>
       </div>
       <div class="stat-box">
-        <span class="stat-number">101%</span>
-        <span class="stat-label">Sharpest Memory</span>
+        <span class="stat-number">100%</span>
+        <span class="stat-label">Web-Slinger Power</span>
       </div>
       <div class="stat-box">
-        <span class="stat-number">∞</span>
-        <span class="stat-label">Adventures Ahead</span>
+        <span class="stat-number">MAX</span>
+        <span class="stat-label">Awesome Energy</span>
       </div>
     </div>
 
-    <!-- Interactive Buttons -->
+    <!-- Spider Action Buttons -->
     <div class="btn-container">
-      <button class="btn btn-blast" onclick="triggerBlast()">🎉 Fire Celebration Blast!</button>
-      <button class="btn btn-surprise" onclick="toggleSurprise()">🎁 Open Birthday Message</button>
+      <button class="btn btn-web" onclick="triggerBlast()">🕸️ Shoot Spider-Web Blast!</button>
+      <button class="btn btn-secret" onclick="toggleSurprise()">⚡ Open Hero Headquarters Message</button>
     </div>
 
-    <!-- Hidden Message Card -->
-    <div class="card" id="surpriseBox">
-      <h3 style="color:#38ef7d; margin-bottom: 8px;">🌟 Dear Arghadeep Adhikary, 🌟</h3>
+    <!-- Secret Birthday Mission Box -->
+    <div class="spidey-card" id="surpriseBox">
+      <h3 style="font-family:'Bangers',cursive; font-size:1.6rem; color:#ffe600; letter-spacing:1px; margin-bottom: 8px;">
+        🕷️ TOP SECRET MISSION FOR ARGHADEEP:
+      </h3>
       <p style="font-size: 0.95rem; line-height: 1.5; color: #f1f2f6;">
-        <strong>​🌟 Happy 10th Birthday, dearest Puchu! 🌟</strong> Turning 10 is a huge and exciting milestone. May this special year bring you incredible new discoveries, wonderful friends, great achievements in school, and boundless happiness every single day. Always dream big and keep shining bright! Have a truly memorable birthday! 🎈🍰🎁
+        Welcome to the <strong>Double Digits Club</strong>! With turning 10 comes great power and unlimited fun! May your year be packed with web-slinging adventures, legendary victories, delicious cake, and heroic moments. Keep swinging high, Arghadeep! 🚀🕸️💥
       </p>
     </div>
   </div>
@@ -344,25 +377,26 @@
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(1.0, audioCtx.currentTime); // Max software volume (100%)
+        masterGain.gain.setValueAtTime(1.0, audioCtx.currentTime);
         masterGain.connect(audioCtx.destination);
       }
       if (audioCtx.state === 'suspended') {
         audioCtx.resume();
       }
 
-      const tempo = 0.45;
+      const tempo = 0.44;
       let startTime = audioCtx.currentTime + 0.05;
 
       melody.forEach(item => {
         const osc = audioCtx.createOscillator();
         const noteGain = audioCtx.createGain();
 
+        // Punchy synth tone fitting superhero games
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(item.f, startTime);
 
         noteGain.gain.setValueAtTime(0.001, startTime);
-        noteGain.gain.linearRampToValueAtTime(0.4, startTime + 0.03);
+        noteGain.gain.linearRampToValueAtTime(0.42, startTime + 0.03);
         noteGain.gain.exponentialRampToValueAtTime(0.001, startTime + item.d * tempo - 0.04);
 
         osc.connect(noteGain);
@@ -375,26 +409,28 @@
       });
 
       const totalDuration = (startTime - audioCtx.currentTime) * 1000;
-      setTimeout(playBirthdayMelody, totalDuration + 400); // Continuous seamless loop
+      setTimeout(playBirthdayMelody, totalDuration + 400);
     }
 
     function enterCelebration() {
       const overlay = document.getElementById('startOverlay');
-      overlay.style.transition = 'opacity 0.5s ease';
+      overlay.style.transition = 'opacity 0.4s ease';
       overlay.style.opacity = '0';
-      setTimeout(() => overlay.remove(), 500);
+      setTimeout(() => overlay.remove(), 400);
 
       playBirthdayMelody();
       triggerBlast();
     }
 
+    // Spider-Man color themed confetti (Red, Blue, Yellow, White)
     function triggerBlast() {
       if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
 
       confetti({
         particleCount: 120,
         spread: 80,
-        origin: { y: 0.6 }
+        origin: { y: 0.6 },
+        colors: ['#e21b22', '#0066cc', '#ffe600', '#ffffff']
       });
     }
 
@@ -407,12 +443,13 @@
 
       if (!candlesBlown) {
         confetti({
-          particleCount: 180,
-          spread: 100,
-          origin: { y: 0.5 }
+          particleCount: 200,
+          spread: 120,
+          origin: { y: 0.5 },
+          colors: ['#e21b22', '#0066cc', '#ffe600', '#ffffff']
         });
         cake.textContent = '🍰';
-        hint.textContent = '🥳 Woohoo! Make a big wish! 🌟';
+        hint.textContent = '🕷️ Web-Power Active! Wish Granted! 🌟';
         candlesBlown = true;
       } else {
         triggerBlast();

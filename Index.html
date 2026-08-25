@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Happy 10th Birthday Arghadeep!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Boogaloo&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(135deg, #1a102f 0%, #2b1055 50%, #591a75 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      padding: 20px 16px 40px;
+    }
+
+    /* Floating Balloons Background */
+    .balloon {
+      position: fixed;
+      bottom: -100px;
+      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+      z-index: 0;
+      opacity: 0.6;
+      animation: floatUp 8s infinite linear;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-120vh) rotate(20deg); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 18px;
+    }
+
+    /* Level Up Badge */
+    .badge {
+      background: linear-gradient(90deg, #ff007f, #7928ca);
+      padding: 6px 18px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.6);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* Title Styling */
+    h1 {
+      font-family: 'Boogaloo', cursive;
+      font-size: 2.5rem;
+      line-height: 1.1;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .highlight-name {
+      background: linear-gradient(45deg, #ffd700, #ff6b6b, #48dbfb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 2.8rem;
+      display: block;
+      margin-top: 4px;
+    }
+
+    /* Card Base */
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 24px;
+      padding: 20px;
+      width: 100%;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Interactive Cake */
+    .cake-zone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .cake-emoji {
+      font-size: 4.8rem;
+      filter: drop-shadow(0 0 16px rgba(255, 215, 0, 0.6));
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .cake-zone:active .cake-emoji {
+      transform: scale(0.9);
+    }
+
+    .cake-hint {
+      font-size: 0.85rem;
+      color: #ffd700;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .stat-box {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-number {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #00f2fe;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: #e0e0e0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Action Buttons */
+    .btn-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 16px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: 'Fredoka', sans-serif;
+      transition: transform 0.1s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-blast {
+      background: linear-gradient(90deg, #ff0844 0%, #ffb199 100%);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(255, 8, 68, 0.4);
+    }
+
+    .btn-surprise {
+      background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+      color: #0d3824;
+      box-shadow: 0 8px 20px rgba(56, 239, 125, 0.3);
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Surprise Box Content */
+    #surpriseBox {
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Balloons Background -->
+  <div class="balloon" style="width:40px;height:55px;left:10%;background:#ff4757;animation-duration:9s;"></div>
+  <div class="balloon" style="width:50px;height:65px;left:75%;background:#2ed573;animation-duration:11s;animation-delay:1.5s;"></div>
+  <div class="balloon" style="width:35px;height:45px;left:45%;background:#ffa502;animation-duration:7s;animation-delay:3s;"></div>
+  <div class="balloon" style="width:45px;height:60px;left:85%;background:#1e90ff;animation-duration:10s;animation-delay:2s;"></div>
+
+  <div class="container">
+    <div class="badge">🚀 LEVEL 10 UNLOCKED 🎮</div>
+
+    <div>
+      <h1>HAPPY BIRTHDAY</h1>
+      <span class="highlight-name">Arghadeep!</span>
+    </div>
+
+    <!-- Interactive Cake Card -->
+    <div class="card cake-zone" onclick="blowCandles()">
+      <div class="cake-emoji" id="cakeEmoji">🎂</div>
+      <p class="cake-hint" id="cakeHint">✨ Tap the cake to blow out candles! ✨</p>
+    </div>
+
+    <!-- 10-Year Stats Card -->
+    <div class="stats-grid">
+      <div class="stat-box">
+        <span class="stat-number">10</span>
+        <span class="stat-label">Years of Awesome</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">3,652</span>
+        <span class="stat-label">Days of Smiles</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">100%</span>
+        <span class="stat-label">Legendary Power</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">∞</span>
+        <span class="stat-label">Adventures Ahead</span>
+      </div>
+    </div>
+
+    <!-- Interactive Buttons -->
+    <div class="btn-container">
+      <button class="btn btn-blast" onclick="triggerBlast()">🎉 Fire Celebration Blast!</button>
+      <button class="btn btn-surprise" onclick="toggleSurprise()">🎁 Open Birthday Message</button>
+    </div>
+
+    <!-- Hidden Message Card -->
+    <div class="card" id="surpriseBox">
+      <h3 style="color:#38ef7d; margin-bottom: 8px;">🌟 Dear Arghadeep Adhikary,</h3>
+      <p style="font-size: 0.95rem; line-height: 1.5; color: #f1f2f6;">
+        Welcome to the **Double Digits Club**! Wishing you a fantastic year filled with thrilling video game victories, endless fun with friends, and giant slices of cake. Keep shining bright! 🚀✨
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Initial celebration blast on load
+    window.onload = function() {
+      setTimeout(() => {
+        triggerBlast();
+      }, 500);
+    };
+
+    function triggerBlast() {
+      // Android vibration support if available
+      if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
+    }
+
+    let candlesBlown = false;
+    function blowCandles() {
+      const cake = document.getElementById('cakeEmoji');
+      const hint = document.getElementById('cakeHint');
+
+      if (navigator.vibrate) navigator.vibrate(200);
+
+      if (!candlesBlown) {
+        confetti({
+          particleCount: 180,
+          spread: 100,
+          origin: { y: 0.5 }
+        });
+        cake.textContent = '🍰';
+        hint.textContent = '🥳 Woohoo! Make a big wish! 🌟';
+        candlesBlown = true;
+      } else {
+        triggerBlast();
+      }
+    }
+
+    function toggleSurprise() {
+      const box = document.getElementById('surpriseBox');
+      const isHidden = box.style.display === 'none' || box.style.display === '';
+      box.style.display = isHidden ? 'block' : 'none';
+      
+      if (isHidden) {
+        triggerBlast();
+        box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  </script>
+</body>
+</html>

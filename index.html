@@ -28,7 +28,7 @@
       padding: 20px 16px 40px;
     }
 
-    /* Floating Balloons Background */
+    /* Floating Balloons */
     .balloon {
       position: fixed;
       bottom: -100px;
@@ -43,7 +43,7 @@
       100% { transform: translateY(-120vh) rotate(20deg); }
     }
 
-    /* Music Floating Toggle Button */
+    /* Music Floating Toggle */
     .music-btn {
       position: fixed;
       top: 15px;
@@ -52,15 +52,20 @@
       background: rgba(255, 255, 255, 0.2);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.3);
-      width: 45px;
-      height: 45px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .music-btn:active {
+      transform: scale(0.9);
     }
 
     .container {
@@ -92,7 +97,6 @@
       50% { transform: scale(1.05); }
     }
 
-    /* Title Styling */
     h1 {
       font-family: 'Boogaloo', cursive;
       font-size: 2.5rem;
@@ -109,7 +113,6 @@
       margin-top: 4px;
     }
 
-    /* Card Base */
     .card {
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(12px);
@@ -229,15 +232,10 @@
     }
   </style>
 </head>
-<body onclick="initAudioOnFirstTouch()">
+<body onclick="startMusicOnInteraction()">
 
-  <!-- Audio Element (Royalty-free Instrumental Tune) -->
-  <audio id="bgMusic" loop preload="auto">
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=happy-birthday-157429.mp3" type="audio/mpeg">
-  </audio>
-
-  <!-- Mute / Unmute Button -->
-  <div class="music-btn" id="musicToggle" onclick="toggleMusic(event)">🔇</div>
+  <!-- Floating Audio Button -->
+  <div class="music-btn" id="musicToggle" onclick="toggleMusic(event)">🎵</div>
 
   <!-- Floating Balloons Background -->
   <div class="balloon" style="width:40px;height:55px;left:10%;background:#ff4757;animation-duration:9s;"></div>
@@ -289,63 +287,103 @@
     <div class="card" id="surpriseBox">
       <h3 style="color:#38ef7d; margin-bottom: 8px;">🌟 Dear Arghadeep Adhikary,</h3>
       <p style="font-size: 0.95rem; line-height: 1.5; color: #f1f2f6;">
-        Welcome to the <strong>Double Digits Club</strong>! Wishing you a fantastic year filled with thrilling video game victories, endless fun with friends, and giant slices of cake. Keep shining bright! 🚀✨
+        Welcome to the <strong>Double Digits Club</strong>! Wishing you a fantastic year filled with thrilling victories, endless fun with friends, and giant slices of cake. Keep shining bright! 🚀✨
       </p>
     </div>
   </div>
 
   <script>
-    const bgMusic = document.getElementById('bgMusic');
-    const musicToggle = document.getElementById('musicToggle');
-    let audioStarted = false;
+    // --- Web Audio API Birthday Tune Synthesizer & Continuous Looper ---
     let audioCtx = null;
+    let isPlaying = false;
+    let loopTimeout = null;
+    let activeOscillators = [];
 
-    // Web Audio Synthesizer for instant sound effects
-    function playChimeEffect() {
-      try {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
-        notes.forEach((freq, index) => {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(freq, audioCtx.currentTime + index * 0.08);
-          gain.gain.setValueAtTime(0.15, audioCtx.currentTime + index * 0.08);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + index * 0.08 + 0.3);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start(audioCtx.currentTime + index * 0.08);
-          osc.stop(audioCtx.currentTime + index * 0.08 + 0.3);
-        });
-      } catch (e) {
-        console.log(e);
+    // Frequencies for Happy Birthday notes
+    const N = {
+      C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23,
+      G4: 392.00, A4: 440.00, B4: 493.88, C5: 523.25,
+      D5: 587.33, Bb4: 466.16
+    };
+
+    // Note pitches and durations (in beats)
+    const melody = [
+      { f: N.C4, d: 0.75 }, { f: N.C4, d: 0.25 }, { f: N.D4, d: 1 }, { f: N.C4, d: 1 }, { f: N.F4, d: 1 }, { f: N.E4, d: 2 },
+      { f: N.C4, d: 0.75 }, { f: N.C4, d: 0.25 }, { f: N.D4, d: 1 }, { f: N.C4, d: 1 }, { f: N.G4, d: 1 }, { f: N.F4, d: 2 },
+      { f: N.C4, d: 0.75 }, { f: N.C4, d: 0.25 }, { f: N.C5, d: 1 }, { f: N.A4, d: 1 }, { f: N.F4, d: 1 }, { f: N.E4, d: 1 }, { f: N.D4, d: 2 },
+      { f: N.Bb4, d: 0.75 }, { f: N.Bb4, d: 0.25 }, { f: N.A4, d: 1 }, { f: N.F4, d: 1 }, { f: N.G4, d: 1 }, { f: N.F4, d: 2 }
+    ];
+
+    function playBirthdayMelody() {
+      if (!isPlaying) return;
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      const tempo = 0.45; // Speed factor
+      let startTime = audioCtx.currentTime + 0.05;
+      activeOscillators = [];
+
+      melody.forEach(item => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        // Warm music box / marimba-like tone
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(item.f, startTime);
+
+        // Natural pluck envelope
+        gain.gain.setValueAtTime(0.001, startTime);
+        gain.gain.linearRampToValueAtTime(0.18, startTime + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + item.d * tempo - 0.04);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(startTime);
+        osc.stop(startTime + item.d * tempo);
+
+        activeOscillators.push(osc);
+        startTime += item.d * tempo;
+      });
+
+      // Calculate entire song length and loop continuously
+      const totalDuration = (startTime - audioCtx.currentTime) * 1000;
+      loopTimeout = setTimeout(() => {
+        if (isPlaying) playBirthdayMelody();
+      }, totalDuration + 500); // 500ms pleasant pause before next loop
     }
 
-    // Auto-start music on the kid's first screen tap (bypasses Android browser autoplay block)
-    function initAudioOnFirstTouch() {
-      if (!audioStarted) {
-        bgMusic.play().then(() => {
-          musicToggle.textContent = '🎵';
-          audioStarted = true;
-        }).catch(() => {});
+    function startMusicOnInteraction() {
+      if (!isPlaying) {
+        isPlaying = true;
+        document.getElementById('musicToggle').textContent = '🎵';
+        playBirthdayMelody();
       }
     }
 
     function toggleMusic(e) {
-      e.stopPropagation(); // Avoid triggering full-page tap
-      if (bgMusic.paused) {
-        bgMusic.play();
-        musicToggle.textContent = '🎵';
-        audioStarted = true;
+      e.stopPropagation();
+      const toggle = document.getElementById('musicToggle');
+      if (isPlaying) {
+        isPlaying = false;
+        clearTimeout(loopTimeout);
+        activeOscillators.forEach(osc => {
+          try { osc.stop(); } catch(err){}
+        });
+        toggle.textContent = '🔇';
       } else {
-        bgMusic.pause();
-        musicToggle.textContent = '🔇';
+        isPlaying = true;
+        toggle.textContent = '🎵';
+        playBirthdayMelody();
       }
     }
 
     function triggerBlast() {
-      playChimeEffect();
+      startMusicOnInteraction();
       if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
 
       confetti({
@@ -357,10 +395,10 @@
 
     let candlesBlown = false;
     function blowCandles() {
+      startMusicOnInteraction();
       const cake = document.getElementById('cakeEmoji');
       const hint = document.getElementById('cakeHint');
 
-      playChimeEffect();
       if (navigator.vibrate) navigator.vibrate(200);
 
       if (!candlesBlown) {
@@ -378,6 +416,7 @@
     }
 
     function toggleSurprise() {
+      startMusicOnInteraction();
       const box = document.getElementById('surpriseBox');
       const isHidden = box.style.display === 'none' || box.style.display === '';
       box.style.display = isHidden ? 'block' : 'none';

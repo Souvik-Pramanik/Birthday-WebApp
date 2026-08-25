@@ -28,6 +28,56 @@
       padding: 20px 16px 40px;
     }
 
+    /* Start Overlay Screen */
+    #startOverlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle, #2b1055 0%, #0d0618 100%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .gift-icon {
+      font-size: 5.5rem;
+      animation: bounceGift 1.2s infinite ease-in-out;
+      filter: drop-shadow(0 0 20px rgba(255, 0, 127, 0.7));
+    }
+
+    @keyframes bounceGift {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-18px) scale(1.08); }
+    }
+
+    .open-btn {
+      margin-top: 24px;
+      background: linear-gradient(90deg, #ff007f, #7928ca);
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 700;
+      padding: 16px 32px;
+      border-radius: 50px;
+      border: none;
+      box-shadow: 0 0 25px rgba(255, 0, 127, 0.8);
+      font-family: 'Fredoka', sans-serif;
+      letter-spacing: 0.5px;
+      animation: pulse 1.6s infinite;
+    }
+
+    .vol-hint {
+      margin-top: 14px;
+      font-size: 0.85rem;
+      color: #ffd700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
     /* Floating Balloons */
     .balloon {
       position: fixed;
@@ -41,31 +91,6 @@
     @keyframes floatUp {
       0% { transform: translateY(0) rotate(0deg); }
       100% { transform: translateY(-120vh) rotate(20deg); }
-    }
-
-    /* Music Floating Toggle */
-    .music-btn {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      z-index: 100;
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      transition: transform 0.2s ease;
-    }
-
-    .music-btn:active {
-      transform: scale(0.9);
     }
 
     .container {
@@ -232,10 +257,16 @@
     }
   </style>
 </head>
-<body onclick="startMusicOnInteraction()">
+<body>
 
-  <!-- Floating Audio Button -->
-  <div class="music-btn" id="musicToggle" onclick="toggleMusic(event)">🎵</div>
+  <!-- Entry Overlay to Guarantee Audio & Full Engagement -->
+  <div id="startOverlay" onclick="enterCelebration()">
+    <div class="gift-icon">🎁</div>
+    <h2 style="font-family:'Boogaloo',cursive; font-size:2.2rem; margin-top:16px;">Special Delivery for Arghadeep!</h2>
+    <p style="color:#d1d8e0; margin-top:6px;">A grand 10th Birthday surprise awaits inside</p>
+    <button class="open-btn">TAP TO UNWRAP 🚀</button>
+    <div class="vol-hint">🔊 Turn your device volume up! 🎶</div>
+  </div>
 
   <!-- Floating Balloons Background -->
   <div class="balloon" style="width:40px;height:55px;left:10%;background:#ff4757;animation-duration:9s;"></div>
@@ -293,20 +324,15 @@
   </div>
 
   <script>
-    // --- Web Audio API Birthday Tune Synthesizer & Continuous Looper ---
     let audioCtx = null;
-    let isPlaying = false;
-    let loopTimeout = null;
-    let activeOscillators = [];
+    let masterGain = null;
 
-    // Frequencies for Happy Birthday notes
     const N = {
       C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23,
       G4: 392.00, A4: 440.00, B4: 493.88, C5: 523.25,
       D5: 587.33, Bb4: 466.16
     };
 
-    // Note pitches and durations (in beats)
     const melody = [
       { f: N.C4, d: 0.75 }, { f: N.C4, d: 0.25 }, { f: N.D4, d: 1 }, { f: N.C4, d: 1 }, { f: N.F4, d: 1 }, { f: N.E4, d: 2 },
       { f: N.C4, d: 0.75 }, { f: N.C4, d: 0.25 }, { f: N.D4, d: 1 }, { f: N.C4, d: 1 }, { f: N.G4, d: 1 }, { f: N.F4, d: 2 },
@@ -315,75 +341,54 @@
     ];
 
     function playBirthdayMelody() {
-      if (!isPlaying) return;
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(1.0, audioCtx.currentTime); // Max software volume (100%)
+        masterGain.connect(audioCtx.destination);
       }
       if (audioCtx.state === 'suspended') {
         audioCtx.resume();
       }
 
-      const tempo = 0.45; // Speed factor
+      const tempo = 0.45;
       let startTime = audioCtx.currentTime + 0.05;
-      activeOscillators = [];
 
       melody.forEach(item => {
         const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
+        const noteGain = audioCtx.createGain();
 
-        // Warm music box / marimba-like tone
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(item.f, startTime);
 
-        // Natural pluck envelope
-        gain.gain.setValueAtTime(0.001, startTime);
-        gain.gain.linearRampToValueAtTime(0.18, startTime + 0.03);
-        gain.gain.exponentialRampToValueAtTime(0.001, startTime + item.d * tempo - 0.04);
+        noteGain.gain.setValueAtTime(0.001, startTime);
+        noteGain.gain.linearRampToValueAtTime(0.4, startTime + 0.03);
+        noteGain.gain.exponentialRampToValueAtTime(0.001, startTime + item.d * tempo - 0.04);
 
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
+        osc.connect(noteGain);
+        noteGain.connect(masterGain);
 
         osc.start(startTime);
         osc.stop(startTime + item.d * tempo);
 
-        activeOscillators.push(osc);
         startTime += item.d * tempo;
       });
 
-      // Calculate entire song length and loop continuously
       const totalDuration = (startTime - audioCtx.currentTime) * 1000;
-      loopTimeout = setTimeout(() => {
-        if (isPlaying) playBirthdayMelody();
-      }, totalDuration + 500); // 500ms pleasant pause before next loop
+      setTimeout(playBirthdayMelody, totalDuration + 400); // Continuous seamless loop
     }
 
-    function startMusicOnInteraction() {
-      if (!isPlaying) {
-        isPlaying = true;
-        document.getElementById('musicToggle').textContent = '🎵';
-        playBirthdayMelody();
-      }
-    }
+    function enterCelebration() {
+      const overlay = document.getElementById('startOverlay');
+      overlay.style.transition = 'opacity 0.5s ease';
+      overlay.style.opacity = '0';
+      setTimeout(() => overlay.remove(), 500);
 
-    function toggleMusic(e) {
-      e.stopPropagation();
-      const toggle = document.getElementById('musicToggle');
-      if (isPlaying) {
-        isPlaying = false;
-        clearTimeout(loopTimeout);
-        activeOscillators.forEach(osc => {
-          try { osc.stop(); } catch(err){}
-        });
-        toggle.textContent = '🔇';
-      } else {
-        isPlaying = true;
-        toggle.textContent = '🎵';
-        playBirthdayMelody();
-      }
+      playBirthdayMelody();
+      triggerBlast();
     }
 
     function triggerBlast() {
-      startMusicOnInteraction();
       if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
 
       confetti({
@@ -395,7 +400,6 @@
 
     let candlesBlown = false;
     function blowCandles() {
-      startMusicOnInteraction();
       const cake = document.getElementById('cakeEmoji');
       const hint = document.getElementById('cakeHint');
 
@@ -416,7 +420,6 @@
     }
 
     function toggleSurprise() {
-      startMusicOnInteraction();
       const box = document.getElementById('surpriseBox');
       const isHidden = box.style.display === 'none' || box.style.display === '';
       box.style.display = isHidden ? 'block' : 'none';
